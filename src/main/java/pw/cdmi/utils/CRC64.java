@@ -86,7 +86,6 @@ public class CRC64 implements Checksum {
         }
         return b;
     }
-
     /**
      * Get long representation of current CRC64 value.
      **/

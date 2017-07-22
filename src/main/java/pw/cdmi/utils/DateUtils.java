@@ -1,5 +1,13 @@
+/* 
+ * 版权声明(Copyright Notice)：
+ *     Copyright(C) 2017-2017 聚数科技成都有限公司。保留所有权利。
+ *     Copyright(C) 2017-2017 www.cdmi.pw Inc. All rights reserved. 
+ * 
+ *     警告：本内容仅限于聚数科技成都有限公司内部传阅，禁止外泄以及用于其他的商业目
+ */ 
 package pw.cdmi.utils;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,18 +15,463 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
 
 
-/**
- * Utilities for parsing and formatting dates.
- * <p>
- * Note that this class doesn't use static methods because of the
- * synchronization issues with SimpleDateFormat. This lets synchronization be
- * done on a per-object level, instead of on a per-class level.
- */
-public class DateUtils {
+/************************************************************
+ * @Description:
+ * <pre>
+ * 提供了日期的各种处理方法.<br/>
+ * </pre>
+ * @author    伍伟
+ * @version   3.0.1
+ * @Project   Alpha CDMI Service Platform, cdmi-core Component. 2017年5月28日
+ ************************************************************/
+public final class DateUtils {
+         
+    /**
+     * <p>
+     * Sun Nov 6 08:49:37 1994 ; ANSI C's asctime() format
+     * </p>
+     */
+    public static final String DATE_FORMAT_ANSIC = "EEE MMM d HH:mm:ss yyyy";
+    
+    /**
+     * 默认的日期格式
+     */
+    public static final String DATE_FORMAT_MS_PATTERN = "yyyy-MM-dd HH:mm:ss sss";
+    
+    /**
+     * 默认的日期格式
+     */
+    public static final String DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm";
+    
+    /**
+     * <p>
+     * Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
+     * </p>
+     */
+    public static final String DATE_FORMAT_RFC_850 = "EEEE, dd-MM-yy HH:mm:ss z";
+    
+    /**
+     * <p>
+     * Sun, 06 Nov 1994 08:49:37 GMT ; RFC 822, updated by RFC 1123
+     * </p>
+     */
+    public static final String DATE_FORMAT_RFC_822 = "EEE, dd MMM yyyy HH:mm:ss z";
+    
+    /**
+     * 日志名称格式
+     */
+    public static final String GLOBAL_LOG_FORMAT = "yyyy-MM-dd_HH-mm-ss";
+    
+    /** RFC 822 parser */
+    public static final String RFC822_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
+    
+    private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    // ISO 8601 format
+    private static final String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+    // Alternate ISO 8601 format without fractional seconds
+    private static final String ALTERNATIVE_ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    public static final String SIMPLE_DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm";
+    
+    public static String getToday()
+    {
+        return format(now());
+    }
+    
+    public static Date parse(String strDate) throws ParseException
+    {
+        return StringUtils.isEmpty(strDate) ? null : parse(strDate, getDatePattern(), null);
+    }
+    
+    
+    public static String transferLongToDateString(long millSec)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(millSec);
+        return sdf.format(date);
+    }
+    
+    private static DateFormat getRfc822DateFormat() {
+        SimpleDateFormat rfc822DateFormat =
+                new SimpleDateFormat(RFC822_DATE_FORMAT, Locale.US);
+        rfc822DateFormat.setTimeZone(new SimpleTimeZone(0, "GMT"));
+
+        return rfc822DateFormat;
+    }
+
+    private static DateFormat getAlternativeIso8601DateFormat() {
+        SimpleDateFormat df = new SimpleDateFormat(ALTERNATIVE_ISO8601_DATE_FORMAT, Locale.US);
+        df.setTimeZone(new SimpleTimeZone(0, "GMT"));
+        return df;
+    }
+    
+    
+    /**
+     * 在日期上增加数个整月
+     * 
+     * @param date 时间
+     * @param n 增加的月数
+     * @return Date 转换后的Date对象
+     */
+    public static Date addMonth(Date date, int n)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MONTH, n);
+        return cal.getTime();
+    }
+
+    
+    /**
+     * 找出时间字符串中包含格式，如果不在已经定义的格式中返回null
+     * 
+     * @param date
+     * @return
+     */
+    public static Date convertDateHeader(String date)
+    {
+        if (StringUtils.isBlank(date))
+        {
+            return null;
+        }
+        Date dateTime = null;
+        try
+        {
+            dateTime = stringToDate(DateUtils.RFC822_DATE_FORMAT, date, "GMT");
+        }
+        catch (ParseException e)
+        {
+            try
+            {
+                dateTime = stringToDate(DateUtils.DATE_FORMAT_RFC_850, date, "GMT");
+            }
+            catch (ParseException e1)
+            {
+                try
+                {
+                    dateTime = stringToDate(DateUtils.DATE_FORMAT_ANSIC, date, "GMT");
+                }
+                catch (ParseException e2)
+                {
+                    dateTime = null;
+                }
+            }
+        }
+        return dateTime;
+    }
+    
+    public static String converTimeStampToString(Timestamp ts)
+    {
+        
+        return new SimpleDateFormat().format(ts);
+    }
+    
+    /**
+     * Date型转化到Calendar型
+     * 
+     * @param date 要转换的Date对象
+     * @return Calendar 返回Calendar
+     */
+    public static Calendar date2Cal(Date date)
+    {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c;
+    }
+    
+    /**
+     * 按照预设格式返回指定时间的字符串
+     * 
+     * @param d 时间
+     * @return Date 转换后的时间字符串
+     */
+    public static String dateToString(Date d)
+    {
+        SimpleDateFormat lenientDateFormat = new SimpleDateFormat(DEFAULT_DATE_PATTERN);
+        if (d == null)
+        {
+            return null;
+        }
+        return lenientDateFormat.format(d);
+    }
+    
+    /**
+     * 按照预设格式返回指定时间的字符串
+     * 
+     * @param d 时间
+     * @param pattern 格式
+     * @return Date 转换后的时间字符串
+     */
+    public static String dateToString(Date d, String pattern)
+    {
+        if (d == null || StringUtils.isBlank(pattern))
+        {
+            return null;
+        }
+        
+        SimpleDateFormat lenientDateFormat = new SimpleDateFormat(pattern);
+        
+        return lenientDateFormat.format(d);
+    }
+    
+    /**
+     * 格式化时间
+     * 
+     * @param pattern string类型
+     * @param d 日期
+     * @param timeZone Sting类型
+     * @return sDate 格式化后的时间
+     */
+    public static String dateToString(String pattern, Date d, String timeZone)
+    {
+        DateFormat dFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
+        if (timeZone != null && timeZone.length() > 0)
+        {
+            Calendar calendar = Calendar.getInstance(new SimpleTimeZone(0, timeZone));
+            dFormat.setCalendar(calendar);
+        }
+        String sDate = dFormat.format(d);
+        return sDate;
+    }
+    
+    /**
+     * 格式化时间
+     * 
+     * @param pattern string类型
+     * @param d 日期
+     * @param timeZone Sting类型
+     * @return sDate 格式化后的时间
+     */
+    public static String dateToString(String pattern, Date d)
+    {
+        DateFormat dFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
+        String sDate = dFormat.format(d);
+        return sDate;
+    }
+    
+    /**
+     * 得到指定格式的Date字符串
+     * 
+     * @author calvin
+     * @param cal 时间
+     * @param pattern 格式
+     * @return String 指定格式的字符串
+     */
+    public static String format(Calendar cal, String pattern)
+    {
+        return cal == null ? "" : new SimpleDateFormat(pattern).format(cal.getTime());
+    }
+    
+    /**
+     * 使用预设Format格式化Date成字符串
+     * 
+     * @author calvin
+     * @param date 时间
+     * @return String 预设格式的字符串
+     */
+    public static String format(Date date)
+    {
+        return date == null ? "" : format(date, getDatePattern());
+    }
+    
+    /**
+     * 得到指定格式的Date字符串
+     * 
+     * @author calvin
+     * @param date 时间
+     * @param pattern 格式
+     * @return String 指定格式的字符串
+     */
+    public static String format(Date date, String pattern)
+    {
+        return date == null ? "" : new SimpleDateFormat(pattern).format(date);
+    }
+    
+    /**
+     * 返回的标准时间字符串
+     * 
+     * @param cal 时间
+     * @return String 转换后的时间字符串
+     */
+    public static String formatDefault(Calendar cal)
+    {
+        return cal == null ? "" : format(cal.getTime(), DATE_FORMAT_PATTERN);
+    }
+    
+    /**
+     * 得到预设Format的当前日期字符串
+     * 
+     * @return
+     */
+    public static String getDate()
+    {
+        return format(now());
+    }
+    
+    /**
+     * 获得默认的日期格式
+     * 
+     * @return String 默认的日期格式
+     */
+    public static String getDatePattern()
+    {
+        return DEFAULT_DATE_PATTERN;
+    }
+    
+    public static long getDateTime(Date date)
+    {
+        if (date == null)
+        {
+            return 0L;
+        }
+        return date.getTime();
+    }
+    
+    /**
+     * 得到系统当前时间
+     * 
+     * @return
+     */
+    public static Date now()
+    {
+        return nowCal().getTime();
+    }
+    
+    /**
+     * 得到当前时间
+     * 
+     * @return String 返回当前时间
+     */
+    public static Calendar nowCal()
+    {
+        return Calendar.getInstance();
+    }
+    
+    /**
+     * 使用指定格式将字符串转为Date
+     * 
+     * @param strDate 时间字符串
+     * @param pattern 时间格式
+     * @return Date 转换后的Date对象
+     * @throws ParseException 发生异常时抛出
+     */
+    public static Date parse(String strDate, String pattern, String timeZone) throws ParseException
+    {
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        if (StringUtils.isNotEmpty(timeZone))
+        {
+            format.setTimeZone(TimeZone.getTimeZone(timeZone));
+        }
+        
+        return StringUtils.isEmpty(strDate) ? null : format.parse(strDate);
+    }
+    
+    /**
+     * 将常见的字符串时间转换成日历对象,供数据库操作使用 字符串格式必须严格满足,否则抛出异常
+     * 
+     * @param inDate 时间
+     * @return Calendar 转换后的Calendar
+     * @throws ParseException 发生异常时抛出
+     */
+    public static Calendar stringToCalendarDefault(String inDate) throws ParseException
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        
+        calendar.setTime(new SimpleDateFormat(DATE_FORMAT_PATTERN).parse(inDate));
+        return calendar;
+    }
+    
+    /**
+     * 转换字符串到日期类
+     * 
+     * @param pattern 日期显示模式
+     * @param d 日期类
+     * @param timeZone 时区，如果为空或者空字符串，则显示当前时区
+     * @return
+     * @throws ParseException
+     */
+    public static Date stringToDate(String pattern, String sTime, String timeZone) throws ParseException
+    {
+        DateFormat dFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
+        
+        if (StringUtils.isNotBlank(timeZone))
+        {
+            Calendar calendar = Calendar.getInstance(new SimpleTimeZone(0, timeZone));
+            dFormat.setCalendar(calendar);
+        }
+        Date date = dFormat.parse(sTime);
+        return date;
+    }
+    
+    /**
+     * 获取N天以前的时间
+     * 
+     * @param now
+     * @param days
+     * @return
+     */
+    public static Date getDateBefore(Date now, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.add(Calendar.DAY_OF_MONTH, -days);
+        return cal.getTime();
+    }
+    
+    /**
+     * 得到N天后的时间
+     * 
+     * @param d
+     * @param day
+     * @return
+     */
+    public static Date getDateAfter(Date now, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.add(Calendar.DAY_OF_MONTH, days);
+        return cal.getTime();
+    }
+    
+    
+    /**
+     * 获取多少分钟前的时间
+     * @param now
+     * @param minute
+     * @return
+     */
+    public static Date getDateBeforeMinute(Date now, int minute)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.add(Calendar.MINUTE, -minute);
+        return cal.getTime();
+    }
+    
+    /** 
+     * 获取N秒后的时间
+     * 
+     * @param now
+     * @param seconds
+     * @return 
+     */
+    public static Date getDateAfterSeconds(Date now, int seconds)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.add(Calendar.SECOND, seconds);
+        return cal.getTime();
+    }
+    
+    /**----------------------------------------**/
     
     /** ISO 8601 parser */
     protected final SimpleDateFormat iso8601DateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -57,27 +510,8 @@ public class DateUtils {
         System.out.println(DATE_FORMAT_RFC_822.length());
         System.out.println(DATE_FORMAT_RFC_850.length());
         System.out.println(DATE_FORMAT_ANSIC.length());
-    }
-    /**
-     * <p>
-     * Sun, 06 Nov 1994 08:49:37 GMT ; RFC 822, updated by RFC 1123
-     * </p>
-     */
-    public static final String DATE_FORMAT_RFC_822 = "EEE, dd MMM yyyy HH:mm:ss z";
-    
-    /**
-     * <p>
-     * Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
-     * </p>
-     */
-    public static final String DATE_FORMAT_RFC_850 = "EEEE, dd-MM-yy HH:mm:ss z";
-    
-    /**
-     * <p>
-     * Sun Nov 6 08:49:37 1994 ; ANSI C's asctime() format
-     * </p>
-     */
-    public static final String DATE_FORMAT_ANSIC = "EEE MMM d HH:mm:ss yyyy";
+    }    
+
     
     /**
      * 转换日期类到字符串
@@ -177,78 +611,35 @@ public class DateUtils {
         Date date = dFormat.parse(sTime);
         return date;
     }
+
     /**
-     * Parses the specified date string as an ISO 8601 date and returns the Date
-     * object.
-     * 
-     * @param dateString
-     *            The date string to parse.
-     *            
-     * @return The parsed Date object.
-     * 
-     * @throws ParseException
-     *             If the date string could not be parsed.
+     * Formats Date to GMT string.
      */
-    public Date parseIso8601Date(String dateString) throws ParseException {
-        try {
-            synchronized (iso8601DateParser) {
-                return iso8601DateParser.parse(dateString);
-            }
-        } catch (ParseException e) {
-            // If the first ISO 8601 parser didn't work, try the alternate
-            // version which doesn't include fractional seconds
-            synchronized (alternateIo8601DateParser) {
-                return alternateIo8601DateParser.parse(dateString);
-            }
-        }
+    public static String formatRfc822Date(Date date) {
+        return getRfc822DateFormat().format(date);
+    }
+
+    /**
+     * Parses a GMT-format string.
+     */
+    public static Date parseRfc822Date(String dateString) throws ParseException {
+        return getRfc822DateFormat().parse(dateString);
+    }
+
+
+    public static String formatIso8601Date(Date date) {
+        return getIso8601DateFormat().format(date);
+    }
+
+    public static String formatAlternativeIso8601Date(Date date) {
+        return getAlternativeIso8601DateFormat().format(date);
     }
     
-    /**
-     * Formats the specified date as an ISO 8601 string.
-     * 
-     * @param date
-     *            The date to format.
-     * 
-     * @return The ISO 8601 string representing the specified date.
-     */
-    public String formatIso8601Date(Date date) {
-        synchronized (iso8601DateParser) {
-            return iso8601DateParser.format(date);
-        }
+    private static DateFormat getIso8601DateFormat() {
+        SimpleDateFormat df = new SimpleDateFormat(ISO8601_DATE_FORMAT, Locale.US);
+        df.setTimeZone(new SimpleTimeZone(0, "GMT"));
+        return df;
     }
-    
-    /**
-     * Parses the specified date string as an RFC 822 date and returns the Date
-     * object.
-     * 
-     * @param dateString
-     *            The date string to parse.
-     *            
-     * @return The parsed Date object.
-     * 
-     * @throws ParseException
-     *             If the date string could not be parsed.
-     */
-    public Date parseRfc822Date(String dateString) throws ParseException {
-        synchronized (rfc822DateParser) {
-            return rfc822DateParser.parse(dateString);
-        }
-    }
-    
-    /**
-     * Formats the specified date as an RFC 822 string.
-     * 
-     * @param date
-     *            The date to format.
-     * 
-     * @return The RFC 822 string representing the specified date.
-     */
-    public String formatRfc822Date(Date date) {
-        synchronized (rfc822DateParser) {
-            return rfc822DateParser.format(date);
-        }
-    }
-    
     
 	/**
 	 * 提取当前时间,并进行格式化显示
