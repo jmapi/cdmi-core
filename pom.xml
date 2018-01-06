@@ -99,7 +99,10 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'master' of https://github.com/jmapi/cdmi-core.git
 		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -227,6 +230,39 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 
+<<<<<<< HEAD
+=======
+		<!-- ajax跨域问题 -->
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-rs-security-cors</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+		</dependency>
+
+		<!-- 解析xml -->
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+		</dependency>
+
+		<!-- mail -->
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-javamail_1.4_spec</artifactId>
+		</dependency>
+
+>>>>>>> branch 'master' of https://github.com/jmapi/cdmi-core.git
 		<!-- logback -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -262,6 +298,24 @@
 		</dependency>
 
 		<dependency>
+<<<<<<< HEAD
+=======
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-framework</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-recipes</artifactId>
+		</dependency>
+
+		<dependency>
+>>>>>>> branch 'master' of https://github.com/jmapi/cdmi-core.git
 			<groupId>pw.cdmi.box</groupId>
 			<artifactId>wcc_crypt</artifactId>
 		</dependency>
