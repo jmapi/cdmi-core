@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import pw.cdmi.exception.CaptchaException;
+
 /************************************************************
  * 验证码的验证.<br/>
  * 
