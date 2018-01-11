@@ -1,12 +1,20 @@
 <?xml version="1.0"?>
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pw.cdmi.core</groupId>
 	<artifactId>cdmi-core</artifactId>
-	<name>core Maven JarLib</name>
+	<packaging>jar</packaging>
+	<name>cdmi-core</name>
 	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
 
 	<parent>
 		<groupId>pw.cdmi</groupId>
@@ -15,11 +23,19 @@
 		<relativePath>../cdmi-parent/pom.xml</relativePath>
 	</parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 	<dependencies>
-
+		<!-- junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- Hibernate OGM Infinispan module; pulls in the OGM core module -->
 		<dependency>
 			<groupId>org.hibernate.ogm</groupId>
@@ -84,6 +100,10 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
+<<<<<<< HEAD
+
+=======
+>>>>>>> branch 'master' of https://github.com/jmapi/cdmi-core.git
 		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -185,21 +205,7 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 		</dependency>
-		<!-- webservice -->
-		<dependency>
-			<groupId>org.apache.axis</groupId>
-			<artifactId>axis</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.axis</groupId>
-			<artifactId>axis-jaxrpc</artifactId>
-		</dependency>
 
-		<!-- cxf -->
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxws</artifactId>
-		</dependency>
 
 		<!-- json转换 -->
 		<dependency>
@@ -225,6 +231,8 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 
+<<<<<<< HEAD
+=======
 		<!-- ajax跨域问题 -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
@@ -255,6 +263,7 @@
 			<artifactId>geronimo-javamail_1.4_spec</artifactId>
 		</dependency>
 
+>>>>>>> branch 'master' of https://github.com/jmapi/cdmi-core.git
 		<!-- logback -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -268,47 +277,30 @@
 			<groupId>org.logback-extensions</groupId>
 			<artifactId>logback-ext-spring</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.codehaus.woodstox</groupId>
-			<artifactId>woodstox-core-asl</artifactId>
-		</dependency>
-
-		<!-- lombok -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-		</dependency>
-
-		<!-- snmp协议 -->
-		<dependency>
-			<groupId>org.snmp4j</groupId>
-			<artifactId>snmp4j</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<!-- junit -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- other -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>jmagick</groupId>
 			<artifactId>jmagick</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-framework</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-recipes</artifactId>
+		</dependency>
 
 		<dependency>
+<<<<<<< HEAD
+=======
 			<groupId>org.apache.curator</groupId>
 			<artifactId>curator-framework</artifactId>
 			<version>2.8.0</version>
@@ -325,6 +317,7 @@
 			<version>2.8.0</version>
 		</dependency>
 		<dependency>
+>>>>>>> branch 'master' of https://github.com/jmapi/cdmi-core.git
 			<groupId>pw.cdmi.box</groupId>
 			<artifactId>wcc_crypt</artifactId>
 			<version>3.5.2.RELEASE</version>
