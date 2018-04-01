@@ -1,4 +1,4 @@
-package pw.cdmi.exception;
+package pw.cdmi.error;
 
 public interface ErrorReason {
 	public int getHttpStatus();
