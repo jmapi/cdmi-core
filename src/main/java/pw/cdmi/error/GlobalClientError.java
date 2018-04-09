@@ -27,6 +27,8 @@ public enum GlobalClientError implements ErrorMessage{
 	
 	UnSupportUsage("系统不支持进行该操作，前端逻辑存在错误或为非法请求."),
 	
+	ResourceNotFound("您要操作的资源没有能找到.."),
+	
 	/** 500 Internal Server Error */
 	InternalError("The Server encountered an internal error.Please try again.");
 	
