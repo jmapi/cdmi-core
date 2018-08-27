@@ -30,8 +30,9 @@ public final class EDToolsEnhance
      * 
      * @param content
      * @return
+     * @throws Exception 
      */
-    public static Map<String, String> encode(String content)
+    public static Map<String, String> encode(String content) throws Exception
     {
         try
         {
@@ -73,8 +74,9 @@ public final class EDToolsEnhance
      * @param content
      * @param encryptedKey
      * @return
+     * @throws Exception 
      */
-    public static String encode(String content, String encryptedKey)
+    public static String encode(String content, String encryptedKey) throws Exception
     {
         try
         {
@@ -100,8 +102,9 @@ public final class EDToolsEnhance
      * @param encryptedContent
      * @param encryptedKey
      * @return
+     * @throws Exception 
      */
-    public static String decode(String encryptedContent, String encryptedKey)
+    public static String decode(String encryptedContent, String encryptedKey) throws Exception
     {
         try
         {

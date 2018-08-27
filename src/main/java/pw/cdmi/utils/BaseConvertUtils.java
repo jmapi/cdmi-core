@@ -215,8 +215,6 @@ public final class BaseConvertUtils extends ConvertUtils
 
 class HexToLongConvert implements Converter
 {
-    @SuppressWarnings("rawtypes")
-    @Override
     public Object convert(Class type, Object arg)
     {
         if (null == arg || !(arg instanceof String))

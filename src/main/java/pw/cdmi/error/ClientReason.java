@@ -37,13 +37,11 @@ public enum ClientReason implements ErrorReason{
     }
 
 
-    @Override
     public int getHttpStatus() {
         return this.status.value();
     }
 
 
-    @Override
     public int getCode() {
         return this.code;
     }

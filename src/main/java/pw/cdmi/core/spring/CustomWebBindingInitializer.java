@@ -2,16 +2,14 @@ package pw.cdmi.core.spring;
 
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebBindingInitializer;
-import org.springframework.web.context.request.WebRequest;
 
 public class CustomWebBindingInitializer implements WebBindingInitializer {
 	
 //	@Autowired
 //	private CustomPropertyEditorRegistrar customPropertyEditorRegistrar;
 
-	
-	@Override
-	public void initBinder(WebDataBinder binder, WebRequest request) {
+	public void initBinder(WebDataBinder binder) {
+		// TODO Auto-generated method stub
 //		customPropertyEditorRegistrar.registerCustomEditors(binder);
         binder.registerCustomEditor(int.class, new FixCustomNumberEditor(Integer.class, true));    
         binder.registerCustomEditor(long.class, new FixCustomNumberEditor(Long.class, true));
